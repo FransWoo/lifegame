@@ -22,7 +22,7 @@ public class CellsPanel extends JPanel {
     }
 
     public CellsPanel(int rows, int cols) {
-        setLayout(new GridLayout(rows, cols));
+        setLayout(new GridLayout(rows, cols, 0, 0));
         this.rows = rows;
         this.cols = cols;
     }

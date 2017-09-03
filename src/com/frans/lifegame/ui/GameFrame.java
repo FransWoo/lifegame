@@ -1,8 +1,10 @@
 package com.frans.lifegame.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,45 +23,62 @@ public class GameFrame extends JFrame {
     private JPanel rightPanel;
     private JButton startBtn;
     private JButton pauseBtn;
+    private JButton randomBtn;
     private Thread gameThread;
-    private int width = 70;
-    private int height = 70;
+    private int width = 80;
+    private int height = 80;
+    private int randomProbability = 30;
+    private boolean run = false;;
     
     public GameFrame() {
-        setSize(800, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        game = new Game(width, height, 100).randomInit(50);
-        game.setGameListener((cells, run) -> {
-            for (int i = 0; i < game.getWidth(); ++i) {
-                for (int j = 0; j < game.getHeight(); ++j) {
-                    if (cells[i][j].getStatus() == Cell.LifeStatus.SURVIVAL) {
-                        leftPanel.getComponentAtXY(i, j).setBackground(CellButton.SURVIVAL_COLOR);
-                    } else {
-                        leftPanel.getComponentAtXY(i, j).setBackground(CellButton.DEATH_COLOR);
-                    }
-                        
-                }
-            }
+        game = new Game(width, height, 100).init();
+        game.setCellChangeListener((cells, run) -> {
+            cells.forEach((cell) -> {
+                updateCellBtnUI(cell);
+            });
             leftPanel.updateUI();
         });
         gameThread = new Thread(game);
         initUI();
     }
     
+    /**
+     * 根据cell更新cellButton的ui
+     * @param cell
+     */
+    public void updateCellBtnUI(final Cell cell) {
+        int x = cell.getX();
+        int y = cell.getY();
+        Component c = leftPanel.getComponentAtXY(x, y);
+        if (cell.getStatus() == Cell.LifeStatus.SURVIVAL) {
+            c.setBackground(CellButton.SURVIVAL_COLOR);
+        } else {
+            c.setBackground(CellButton.DEATH_COLOR);
+        }
+    }
+    
     public void startGame() {
-        gameThread.start();
+        run = true;
+        if (!gameThread.isAlive())
+            gameThread.start();
+        else {
+            game.setRun(run);
+        }
     }
     
     public void pauseGame() {
-        game.setRun(false);
+        run = false;
+        game.setRun(run);
     }
     
     public void initUI() {
         leftPanel = new CellsPanel(width, height);
         rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        this.getContentPane().add(leftPanel, BorderLayout.CENTER);
-        this.getContentPane().add(rightPanel, BorderLayout.EAST);
+        rightPanel.setLayout(new GridLayout(0, 1));
+        add(leftPanel, BorderLayout.WEST);
+        add(rightPanel, BorderLayout.EAST);
+        leftPanel.setPreferredSize(new Dimension(800, 800));
         startBtn = new JButton("start");
         startBtn.addActionListener((e) -> {
             startGame();
@@ -73,13 +92,39 @@ public class GameFrame extends JFrame {
             pauseBtn.setEnabled(false);
             startBtn.setEnabled(true);
         });
+        pauseBtn.setEnabled(false);
         rightPanel.add(pauseBtn);
+        randomBtn = new JButton("random");
+        randomBtn.addActionListener((e) -> {
+            if (!run) {
+                game.randomInit(randomProbability);
+                for (int i = 0; i < game.getWidth(); ++i) {
+                    for (int j = 0; j < game.getHeight(); ++j) {
+                        updateCellBtnUI(game.getCellByXY(i, j));
+                    }
+                }
+            }
+        });
+        rightPanel.add(randomBtn);
         
-        for (int j = 0; j < width; ++j) {
-            for (int i = 0; i < height; ++i) {
-                leftPanel.add(new CellButton());
+        for (int j = 0; j < height; ++j) {
+            for (int i = 0; i < width; ++i) {
+                CellButton btn = new CellButton(i, j);
+                btn.addActionListener((e) -> {
+                    if (!run) {
+                        if (btn.getBackground() == CellButton.DEATH_COLOR) {
+                            btn.setBackground(CellButton.SURVIVAL_COLOR);
+                            game.getCellByXY(btn.getxInCellPanel(), btn.getyInCellPanel()).setStatus(Cell.LifeStatus.SURVIVAL);
+                        } else {
+                            btn.setBackground(CellButton.DEATH_COLOR);
+                            game.getCellByXY(btn.getxInCellPanel(), btn.getyInCellPanel()).setStatus(Cell.LifeStatus.DEATH);
+                        }
+                    }
+                });
+                leftPanel.add(btn);
             }
         }
+        pack();
     }
 
 }
