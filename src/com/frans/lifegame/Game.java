@@ -29,7 +29,7 @@ public class Game implements Runnable{
     }
     
     /**
-     * ³õÊ¼»¯È«²¿cellÎªdeath
+     * åˆå§‹åŒ–å…¨éƒ¨cellä¸ºdeath
      * @return this
      */
     public Game init() {
@@ -45,14 +45,14 @@ public class Game implements Runnable{
     /**
      * @param x
      * @param y
-     * @return ×ø±êÖĞµÄcell
+     * @return åæ ‡ä¸­çš„cell
      */
     public Cell getCellByXY(int x, int y) {
         return cells[x][y];
     }
     
     /**
-     * Ëæ»ú³õÊ¼»¯
+     * éšæœºåˆå§‹åŒ–
      * @param probability
      * @return
      */
@@ -73,7 +73,7 @@ public class Game implements Runnable{
     }
     
     /**
-     * ÉèÖÃÃ¿¸ô¶àÉÙºÁÃëÔËĞĞÒ»´Î
+     * è®¾ç½®æ¯éš”å¤šå°‘æ¯«ç§’è¿è¡Œä¸€æ¬¡
      * @param interval
      */
     public void setInterval(int interval) {
@@ -83,7 +83,7 @@ public class Game implements Runnable{
     /**
      * @param x 
      * @param y
-     * @return Éú´æµÄÁÚ¾ÓÊıÁ¿
+     * @return ç”Ÿå­˜çš„é‚»å±…æ•°é‡
      */
     public int getNeighbor(int x, int y) {
         int sum = 0;
@@ -157,7 +157,7 @@ public class Game implements Runnable{
 
     /**
      * @author franswoo
-     * ¼àÌıËùÓĞµÄcells
+     * ç›‘å¬æ‰€æœ‰çš„cells
      *
      */
     @FunctionalInterface
@@ -167,7 +167,7 @@ public class Game implements Runnable{
     
     /**
      * @author franswoo
-     * ¼àÌı¸Ä±ä¹ıµÄcells
+     * ç›‘å¬æ”¹å˜è¿‡çš„cells
      *
      */
     @FunctionalInterface

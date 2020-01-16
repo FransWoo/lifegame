@@ -16,8 +16,8 @@ public class Cell {
     }
 
     /**
-     * Ê¹Ï¸°û½ø»¯µ½ÏÂÒ»¸ö×´Ì¬
-     * @return ×´Ì¬ÊÇ·ñ¸Ä±ä¹ı
+     * ä½¿ç»†èƒè¿›åŒ–åˆ°ä¸‹ä¸€ä¸ªçŠ¶æ€
+     * @return çŠ¶æ€æ˜¯å¦æ”¹å˜è¿‡
      */
     public boolean evolve() {
         if (status == nextStatus)

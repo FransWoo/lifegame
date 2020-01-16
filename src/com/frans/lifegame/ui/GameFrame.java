@@ -24,6 +24,7 @@ public class GameFrame extends JFrame {
     private JButton startBtn;
     private JButton pauseBtn;
     private JButton randomBtn;
+    private JButton clearBtn;
     private Thread gameThread;
     private int width = 80;
     private int height = 80;
@@ -44,7 +45,7 @@ public class GameFrame extends JFrame {
     }
     
     /**
-     * 根据cell更新cellButton的ui
+     * 鏍规嵁cell鏇存柊cellButton鐨剈i
      * @param cell
      */
     public void updateCellBtnUI(final Cell cell) {
@@ -106,6 +107,18 @@ public class GameFrame extends JFrame {
             }
         });
         rightPanel.add(randomBtn);
+        clearBtn = new JButton("clear");
+        clearBtn.addActionListener((e) -> {
+            if (!run) {
+                game.init();
+                for (int i = 0; i < game.getWidth(); ++i) {
+                    for (int j = 0; j < game.getHeight(); ++j) {
+                        updateCellBtnUI(game.getCellByXY(i, j));
+                    }
+                }
+            }
+        });
+        rightPanel.add(clearBtn);
         
         for (int j = 0; j < height; ++j) {
             for (int i = 0; i < width; ++i) {
